@@ -1,0 +1,36 @@
+---
+id: dd2dd2d9-c9eb-46cb-8eb0-ae1f6262af38
+---
+classDiagram
+    %% Les classes (Tables)
+    class Fournisseur {
+        +id
+        +nom
+        +adresse
+        +email
+        +telephone
+    }
+
+    class Produit {
+        +id
+        +nom
+        +prix
+        +stock
+        +fournisseur_id
+    }
+
+    class Famille {
+        +id
+        +nom
+    }
+
+    %% La Table Pivot (Cachée mais nécessaire)
+    class ProduitFamille {
+        +produit_id
+        +famille_id
+    }
+
+    %% Les Relations
+    Fournisseur "1" -- "1..*" Produit : envoie >
+    Produit "1" -- "*" ProduitFamille : appartient >
+    Famille "1" -- "*" ProduitFamille : contient >
