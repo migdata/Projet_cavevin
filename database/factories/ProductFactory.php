@@ -19,6 +19,7 @@ class ProductFactory extends Factory
         return [
             //ajout  des données factices pour le produit
             'name' => $this->faker->words(3, true),
+            'type' => $this->faker->randomElement(['Vin', 'Spiritueux','Bières']),
             'description' => $this->faker->sentence(),
             'price' => $this->faker->randomFloat(2, 1, 100),
             'stock_quantity' => $this->faker->numberBetween(0, 100),

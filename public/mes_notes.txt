@@ -1,0 +1,12 @@
+creation des assests pour mettre en place le design 
+
+comment fonctionne le 
+@foreach($products as $product)
+
+@foreach : "Pour chaque produit"
+
+($products : "dans l'ensemble des produits présent dans le stock récuperé de chez le  Controller"
+
+as : "prends-en un au hasard"
+
+$product) : " pour qu'on puisse afficher les infos le concernant"

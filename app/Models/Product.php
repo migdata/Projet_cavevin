@@ -23,4 +23,10 @@ class Product extends Model
         'barcode',
         'supplier_id',
     ];
+
+    // définition de la relation avec le modèle Supplier (fournisseur)
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }               
 }
