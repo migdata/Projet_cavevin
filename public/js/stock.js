@@ -1,21 +1,52 @@
-// Fichier : public/js/stock.js
-
 document.addEventListener('DOMContentLoaded', function() {
-    console.log("Système de gestion de stock ");
-
-    // 1. On repère tous les boutons + et -
     const buttons = document.querySelectorAll('.btn-action');
 
-    // 2. Qui a cliqué sur quoi ?
     buttons.forEach(button => {
         button.addEventListener('click', function() {
-            // Récupération des infos stockées dans les attributs HTML du bouton
-            let productId = this.getAttribute('data-id');
-            let action = this.getAttribute('data-action'); // 'increase' ou 'decrease'
+            
+          
+            this.disabled = true; 
 
-            // Pour l'instant, on teste juste que le clic marche
-            console.log(`produit choisi : ${productId}, Action choisie : ${action}`);
-            alert(`Tu veux ${action === 'increase' ? 'ajouter' : 'retirer'} du stock au produit n°${productId}`);
+            const productId = this.getAttribute('data-id');
+            const action = this.getAttribute('data-action');
+
+           
+           const stockDisplay = document.getElementById(`stock-display-${productId}`);
+
+            const monToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // Appel Fetch
+            fetch(`/products/${productId}/update-stock`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': monToken
+                },
+                body: JSON.stringify({ action: action })
+            })
+            
+            .then(response => response.json())
+            .then(data => {
+                console.log('Réponse serveur :', data);
+
+                if (data.success) {
+                    console.log('Stock mis à jour avec succès.' , stockDisplay);
+                    // Mise à jour du chiffre
+                    stockDisplay.textContent = data.newStock;
+
+                   
+                    stockDisplay.style.color = (action === 'increase') ? 'green' : 'red';
+                    
+                    setTimeout(() => {
+                        stockDisplay.style.color = '';
+                    }, 500);
+                }
+            })
+            .catch(error => console.error('Erreur:', error))
+            .finally(() => {
+                // Réactivation du bouton
+                this.disabled = false;
+            });
         });
     });
 });

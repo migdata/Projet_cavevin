@@ -60,13 +60,13 @@
                                 <td class="text-end">
                                     <button class="btn btn-outline-danger btn-sm btn-action" 
                                             data-id="{{ $product->id }}" 
-                                            data-action="decrease">
+                                            data-action="-">
                                         <i class="fas fa-minus"></i>
                                     </button>
 
                                     <button class="btn btn-outline-success btn-sm btn-action" 
                                             data-id="{{ $product->id }}" 
-                                            data-action="increase">
+                                            data-action="+">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </td>

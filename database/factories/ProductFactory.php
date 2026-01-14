@@ -22,7 +22,7 @@ class ProductFactory extends Factory
             'type' => $this->faker->randomElement(['Vin', 'Spiritueux','Bières']),
             'description' => $this->faker->sentence(),
             'price' => $this->faker->randomFloat(2, 1, 100),
-            'stock_quantity' => $this->faker->numberBetween(0, 100),
+            'stock' => $this->faker->numberBetween(0, 100),
             'barcode' => $this->faker->ean13(),
             'supplier_id' => \App\Models\Supplier::factory(), // Associer un fournisseur
         ];
