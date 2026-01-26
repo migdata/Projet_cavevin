@@ -19,7 +19,7 @@ class Product extends Model
         'name',
         'description',
         'price',
-        'stock_quantity',
+        'stock',
         'barcode',
         'supplier_id',
     ];
