@@ -66,7 +66,7 @@
                                 <td class="ps-4">
                                     <div class="d-flex align-items-center">
                                         <div class="rounded-circle bg-light p-2 me-3 text-secondary">
-                                            <i class="fas fa-wine-glass-alt"></i>
+                                
                                         </div>
                                         <div>
                                             <strong>{{ $product->name }}</strong><br>

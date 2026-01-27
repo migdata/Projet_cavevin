@@ -50,6 +50,9 @@ class ImportController extends Controller
                 // Colonne 3 : Sous famille (Ex: COMPTOIRE DES SOMMELIERS)
                 $description = $data[3] ?? '';
 
+                // colonne 2 : Type (Ex: Vin Rouge, Vin Blanc, Champagne, Spiritueux, etc.)
+                $type = $data[2] ?? 'Inconnu';
+
                 // Sécurité : Si pas de code barre, on ignore la ligne
                 if (empty($barcode)) {
                     continue; 
@@ -69,7 +72,11 @@ class ImportController extends Controller
                         'price'          => (float) $prix,
                         'stock'          => (int) $stock, // Ton modèle utilise bien 'stock'
                         'description'    => $description,
+                        'type'           => $type,
+
                         // 'supplier_id' => 1 // On pourrait mettre un fournisseur par défaut
+                        'supplier_id'   => $defaultSupplierId = 1, // ID du fournisseur par défaut 
+                        
                     ]
                 );
 
