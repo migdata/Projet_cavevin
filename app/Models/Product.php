@@ -26,6 +26,10 @@ class Product extends Model
     ];
 
     // définition de la relation avec le modèle Supplier (fournisseur)
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo // ajout d'un docblock pour indiquer le type de retour
+     */
     public function supplier()
     {
         return $this->belongsTo(Supplier::class);

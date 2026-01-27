@@ -1,0 +1,18 @@
+# phpstan.neon - Laravel Windows Optimisé
+includes:
+    - vendor/nunomaduro/larastan/extension.neon
+
+parameters:
+    paths:
+        - app
+        - database
+        - routes
+        - tests
+    level: 5
+    excludePaths:
+        - storage
+        - bootstrap
+        - vendor
+    ignoreErrors:
+        - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Builder::#'
+    reportUnmatchedIgnoredErrors: false

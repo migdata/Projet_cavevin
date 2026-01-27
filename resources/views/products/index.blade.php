@@ -23,9 +23,13 @@
                     <i class="fas fa-file-import me-1"></i> Importer DGSYS
                 </button>
                 
-                <button class="btn btn-dark">
+                <a href="{{ route('exportPdf') }}" class="btn btn-danger">
                     <i class="fas fa-file-pdf me-1"></i> Exporter PDF
-                </button>
+                </a>
+
+                <a href="{{ route('products.calendar') }}" class="btn btn-info text-white ms-2">
+                         <i class="fas fa-calendar-alt"></i> Voir l'Historique
+                </a>
             </div>
         </div>
 
@@ -47,6 +51,49 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+
+        <div class="card mb-4 p-3 bg-light">
+        <form action="{{ route('products.index') }}" method="GET" class="row g-3 align-items-end">
+            
+            <div class="col-md-3">
+                <label class="form-label">Recherche</label>
+                <input type="text" name="search" class="form-control" placeholder="Nom ou Code barre" value="{{ request('search') }}">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Type</label>
+                <select name="type" class="form-select">
+                    <option value="">-- Tous les types --</option>
+                    @foreach($types as $type)
+                        <option value="{{ $type }}" {{ request('type') == $type ? 'selected' : '' }}>
+                            {{ $type }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Fournisseur</label>
+                <select name="supplier_id" class="form-select">
+                    <option value="">-- Tous les fournisseurs --</option>
+                    @foreach($suppliers as $supplier)
+                        <option value="{{ $supplier->id }}" {{ request('supplier_id') == $supplier->id ? 'selected' : '' }}>
+                            {{ $supplier->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-primary w-100 mb-2">
+                    <i class="fas fa-filter"></i> Filtrer
+                </button>
+                <a href="{{ route('products.index') }}" class="btn btn-secondary w-100">
+                    Réinitialiser
+                </a>
+            </div>
+        </form>
+    </div>
 
         <div class="card shadow-sm border-0">
             <div class="card-body p-0">

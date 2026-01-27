@@ -24,3 +24,10 @@ Route::post('/products/{id}/update-stock', [ProductController::class, 'updateSto
 // route pour traiter les fichiers csv depuis le formulaire 
 
 Route::post('/admin/import', [ImportController::class, 'processImport'])->name('import.process');
+
+// pour téléchager l'inventaire au format pdf
+Route::get('/admin/export-pdf', [ProductController::class, 'exportPdf'])->name('exportPdf');
+
+//acceder au calendrier 
+
+Route::get('/admin/calendar', [ProductController::class, 'calendar'])->name('products.calendar');

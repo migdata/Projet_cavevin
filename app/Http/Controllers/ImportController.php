@@ -19,15 +19,16 @@ class ImportController extends Controller
 
         // 2. Ouverture du fichier
         $file = $request->file('csv_file');
-        
+       
+        $count = 0; // Compteur pour savoir combien de produits on a traité
+
         // On ouvre le fichier en mode lecture ('r')
         if (($handle = fopen($file->getPathname(), 'r')) !== FALSE) {
             
             // On saute la première ligne (les titres : "Etat stock, Type...")
             fgetcsv($handle, 1000, ','); 
 
-            $count = 0; // Compteur pour savoir combien de produits on a traité
-
+          
             // 3. Lecture ligne par ligne
             // On boucle tant qu'il y a des lignes dans le fichier
             while (($data = fgetcsv($handle, 1000, ',')) !== FALSE) {
