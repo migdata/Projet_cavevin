@@ -13,16 +13,19 @@ class ProductController extends Controller
     // --- GESTION DES PRODUITS ET FILTRES 
     public function index(Request $request)
     {
-        // 1. On prépare la requête (Query Builder)
+        /*1. On recupère les data de la table product avec le fournisseur associé( c'est le eager loading)
+        * si on en fait pas cela laravel fera la requete des products + 1 requete par product pour trouver le fournisseur 
+         avec with les deux se font en une fois*/
+
         $query = Product::with('supplier');
 
-        // 2. Filtre : Recherche texte (Nom ou Code Barre)
+        // 2. Filtre :on verifie que l'utilisateur a quelque chose sinon on saute 
         if ($request->filled('search')) {
             $query->where('name', 'like', '%' . $request->search . '%')
                   ->orWhere('barcode', 'like', '%' . $request->search . '%');
         }
 
-        // 3. Filtre : Type de produit (Vin, Bière...)
+        // 3. Filtre du menu deroulant 
         if ($request->filled('type')) {
             $query->where('type', $request->type);
         }
@@ -32,6 +35,7 @@ class ProductController extends Controller
             $query->where('supplier_id', $request->supplier_id);
         }
 
+        
         // 5. Exécution de la requête avec pagination
         $products = $query->orderBy('name', 'asc')->paginate(10);
 
@@ -130,9 +134,10 @@ class ProductController extends Controller
             $signe = $m->quantity > 0 ? '+' : '';
             $titre = $m->product->name . " (" . $signe . $m->quantity . ")";
 
+            // une boucle pour permettre la liaison entre le serveur( laravel) et la navigateur (js) en passant par du json 
             $events[] = [
                 'title' => $titre,
-                'start' => $m->created_at->toIso8601String(), // Format de date ISO
+                'start' => $m->created_at->toIso8601String(), // Format de date ISO pour lire ex : 2026-01-28T10:00:00
                 'color' => $color,
                 // 'allDay' => false // Pour voir l'heure exacte
             ];

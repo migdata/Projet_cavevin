@@ -13,25 +13,44 @@
 </head>
 <body>
 
-    <div class="container mt-5">
-        
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="text-danger fw-bold"><i class="fas fa-wine-bottle me-2"></i>Gestion des Stocks</h1>
-            
-            <div>
-                <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">
-                    <i class="fas fa-file-import me-1"></i> Importer DGSYS
-                </button>
-                
-                <a href="{{ route('exportPdf') }}" class="btn btn-danger">
-                    <i class="fas fa-file-pdf me-1"></i> Exporter PDF
-                </a>
+   <div class="container py-4">
 
-                <a href="{{ route('products.calendar') }}" class="btn btn-info text-white ms-2">
-                         <i class="fas fa-calendar-alt"></i> Voir l'Historique
-                </a>
+        <!-- Header -->
+        <div class="card shadow-sm mb-4 border-0">
+            <div class="card-body">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                    <h1 class="h3 mb-3 text-primary fw-bold">
+                        Gestion du Stock
+                    </h1>
+
+                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                        <span class="fw-semibold text-muted">
+                            <i class="fas fa-user-circle me-1"></i>
+                            {{ Auth::user()?->name ?? 'Utilisateur' }}
+                        </span>
+
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="fas fa-sign-out-alt me-1"></i>Déconnexion
+                            </button>
+                        </form>
+                    </div>
+                </div>            
+                <div>
+                    <button type="button" class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#importModal">
+                        <i class="fas fa-file-import me-1"></i> Importer DGSYS
+                    </button>
+                    
+                    <a href="{{ route('exportPdf') }}" class="btn btn-danger">
+                        <i class="fas fa-file-pdf me-1"></i> Exporter PDF
+                    </a>
+
+                    <a href="{{ route('products.calendar') }}" class="btn btn-info text-white ms-2">
+                            <i class="fas fa-calendar-alt"></i> Voir l'Historique
+                    </a>
+                </div>
             </div>
-        </div>
 
         @if(session('success'))
             <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">

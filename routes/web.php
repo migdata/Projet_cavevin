@@ -1,33 +1,59 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-// ajout de la route du controller des produits
+use Illuminate\Http\Request;
+
+// Imports des Contrôleurs
 use App\Http\Controllers\ProductController;
-
-// ajout de la route du controller d'import de produits de l'applcation DGSYS
 use App\Http\Controllers\ImportController;
+use App\Http\Controllers\LoginController; // <--- On ajoute le contrôleur de connexion
 
-use Illuminate\Support\Facades\App;
+/*
+|--------------------------------------------------------------------------
+| 1. ROUTES PUBLIQUES (Accessibles sans connexion)
+|--------------------------------------------------------------------------
+*/
 
+// Redirection de la page d'accueil vers le login
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
 });
 
-// routes pour la gestion des produits et des stocks
-Route::get('/stocks', [ProductController::class, 'index'])
-->name('products.index');
+// Routes de Connexion (Login)
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 
-// mise a jour du stock via api ajax
-Route::post('/products/{id}/update-stock', [ProductController::class, 'updateStock'])
-->name('products.updateStock');
 
-// route pour traiter les fichiers csv depuis le formulaire 
+/*
+|--------------------------------------------------------------------------
+| 2. ROUTES PROTÉGÉES (Nécessite d'être connecté)
+|--------------------------------------------------------------------------
+| Le middleware 'auth' vérifie l'identité.
+*/
+Route::middleware('auth')->group(function () {
 
-Route::post('/admin/import', [ImportController::class, 'processImport'])->name('import.process');
+    // Déconnexion
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// pour téléchager l'inventaire au format pdf
-Route::get('/admin/export-pdf', [ProductController::class, 'exportPdf'])->name('exportPdf');
+    // --- GESTION DES PRODUITS ---
+    
+    // Liste des produits (Page principale)
+    Route::get('/admin/products', [ProductController::class, 'index'])->name('products.index');
 
-//acceder au calendrier 
+    // Mise à jour du stock (+/-) via AJAX
+    Route::post('/products/{id}/update-stock', [ProductController::class, 'updateStock'])->name('products.updateStock');
 
-Route::get('/admin/calendar', [ProductController::class, 'calendar'])->name('products.calendar');
+    // --- IMPORT / EXPORT ---
+
+    // Traitement du fichier CSV (Import DGSYS)
+    Route::post('/admin/import', [ImportController::class, 'processImport'])->name('import.process');
+
+    // Téléchargement PDF
+    Route::get('/admin/export-pdf', [ProductController::class, 'exportPdf'])->name('exportPdf');
+
+    // --- TRAÇABILITÉ ---
+
+    // Calendrier des mouvements
+    Route::get('/admin/calendar', [ProductController::class, 'calendar'])->name('products.calendar');
+
+});
