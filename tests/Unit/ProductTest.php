@@ -24,6 +24,7 @@ class ProductTest extends TestCase
                          'description',
                           'price', 
                           'stock', 
+                            'type',
                            'barcode',
                             'supplier_id', 
                         ];

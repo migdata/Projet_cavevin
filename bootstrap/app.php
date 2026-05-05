@@ -12,7 +12,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->alias([
+            'isAdmin'   => \App\Http\Middleware\IsAdmin::class,
+            'logAction' => \App\Http\Middleware\LogAction::class,
+        ]);
+
+        // Headers de sécurité sur toutes les requêtes
+        $middleware->append(\App\Http\Middleware\SecurityHeaders::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

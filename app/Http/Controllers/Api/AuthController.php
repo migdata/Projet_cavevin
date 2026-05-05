@@ -5,45 +5,67 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Sanctum\HasApiTokens;
+use OpenApi\Attributes as OA;
 
 class AuthController extends Controller
 {
-use HasApiTokens, HasFactory;
-    // Connexion et recevoir le token 
+    #[OA\Post(
+        path: "/api/login",
+        summary: "Connexion et obtention du token",
+        tags: ["Authentication"],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(
+                required: ["email", "password"],
+                properties: [
+                    new OA\Property(property: "email", type: "string", example: "admin@test.com"),
+                    new OA\Property(property: "password", type: "string", example: "••••••••")
+                ]
+            )
+        ),
+        responses: [
+            new OA\Response(response: 200, description: "Connexion réussie"),
+            new OA\Response(response: 401, description: "Identifiants incorrects"),
+            new OA\Response(response: 429, description: "Trop de tentatives")
+        ]
+    )]
     public function login(Request $request)
     {
-        // Validation email et password  
         $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
+            'email'    => 'required|email|max:255',
+            'password' => 'required|string|min:6|max:100',
         ]);
 
-        // Vérification de l'user dans la bdd 
         $user = User::where('email', $request->email)->first();
 
-        // Vérification si ce sont les bonnes entrées 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Identifiant incorrect'], 401);
+            return response()->json([
+                'success' => false,
+                'message' => 'Identifiants incorrects'
+            ], 401);
         }
 
-        // Nettoyage des old_tokens 
         $user->tokens()->delete();
-
-        // Création du new_token
         $monToken = $user->createToken('auth_token')->plainTextToken;
 
-        // Envoi au format JSON
         return response()->json([
-            'message' => 'Connexion réussie !',
+            'message'      => 'Connexion réussie !',
             'access_token' => $monToken,
-            'user' => $user
+            'user'         => $user
         ]);
     }
 
+    #[OA\Post(
+        path: "/api/logout",
+        summary: "Déconnexion",
+        tags: ["Authentication"],
+        security: [["bearerAuth" => []]],
+        responses: [
+            new OA\Response(response: 200, description: "Déconnexion réussie"),
+            new OA\Response(response: 401, description: "Non authentifié")
+        ]
+    )]
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
